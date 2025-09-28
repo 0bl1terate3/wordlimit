@@ -1,20 +1,12 @@
 {
-    "name": "Advanced Word Limit Control",
-    "version": "1.0.0",
-    "description": "Advanced word limit controls for character responses with per-character settings, auto-trimming, and custom instructions.",
+    "display_name": "Advanced Word Limit Control",
     "author": "SillyTavern Community",
-    "license": "MIT",
+    "version": "1.0.0",
+    "js": "index.js",
+    "description": "Advanced word limit controls for character responses with per-character settings, auto-trimming, and custom instructions.",
     "homepage": "https://github.com/0bl1terate3/wordlimit",
     "repository": {
         "type": "git",
         "url": "https://github.com/0bl1terate3/wordlimit.git"
-    },
-    "main": "index.js",
-    "displayName": "Advanced Word Limit Control",
-    "sillytavern": {
-        "version": ">=1.10.0",
-        "compatibility": "stable",
-        "displayName": "Advanced Word Limit Control",
-        "description": "Advanced word limit controls for character responses with per-character settings, auto-trimming, and custom instructions."
     }
 }
