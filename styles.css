@@ -1,0 +1,307 @@
+/* Advanced Word Limit Control Extension Styles */
+
+/* Word Limit UI Styling */
+#word_limit_extension_ui {
+    transition: all 0.3s ease;
+}
+
+#word_limit_extension_ui .flex-container {
+    margin-bottom: 10px;
+}
+
+#word_limit_extension_ui label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+#word_limit_extension_ui label small {
+    color: var(--SmartThemeBodyColor);
+    opacity: 0.8;
+    font-size: 0.85em;
+}
+
+#word_limit_extension_ui input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 4px;
+    background: var(--SmartThemeBodyColor);
+    color: var(--SmartThemeBodyText);
+}
+
+#word_limit_extension_ui input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.1);
+}
+
+#word_limit_extension_ui select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 4px;
+    background: var(--SmartThemeBodyColor);
+    color: var(--SmartThemeBodyText);
+}
+
+#word_limit_extension_ui textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 4px;
+    background: var(--SmartThemeBodyColor);
+    color: var(--SmartThemeBodyText);
+    resize: vertical;
+    min-height: 60px;
+}
+
+#word_limit_extension_ui .checkbox_label {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-bottom: 0;
+}
+
+#word_limit_extension_ui .checkbox_label small {
+    margin-left: 8px;
+    font-weight: 500;
+}
+
+/* Word limit status indicator */
+.word-limit-status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 500;
+    margin-left: 8px;
+}
+
+.word-limit-status.enabled {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.word-limit-status.disabled {
+    background: rgba(158, 158, 158, 0.2);
+    color: #9E9E9E;
+}
+
+/* Extension-specific styling */
+.word-limit-extension-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.word-limit-extension-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 600;
+}
+
+.word-limit-extension-header p {
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+/* Settings panel styling */
+.word-limit-settings-panel {
+    background: var(--SmartThemeBodyColor);
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.word-limit-settings-panel h4 {
+    margin: 0 0 10px 0;
+    color: var(--SmartThemeBodyText);
+    font-size: 1em;
+}
+
+/* Control group styling */
+.word-limit-control-group {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    border-left: 3px solid #667eea;
+}
+
+.word-limit-control-group h5 {
+    margin: 0 0 8px 0;
+    color: var(--SmartThemeBodyText);
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+/* Input styling */
+.word-limit-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--SmartThemeBorderColor);
+    border-radius: 4px;
+    background: var(--SmartThemeBodyColor);
+    color: var(--SmartThemeBodyText);
+    font-size: 0.9em;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.word-limit-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+/* Button styling */
+.word-limit-button {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.word-limit-button:hover {
+    background: #5a6fd8;
+    transform: translateY(-1px);
+}
+
+.word-limit-button:active {
+    transform: translateY(0);
+}
+
+.word-limit-button.secondary {
+    background: #6c757d;
+}
+
+.word-limit-button.secondary:hover {
+    background: #5a6268;
+}
+
+/* Status indicators */
+.word-limit-status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+.word-limit-status-indicator.active {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+.word-limit-status-indicator.inactive {
+    background: rgba(158, 158, 158, 0.2);
+    color: #9E9E9E;
+}
+
+.word-limit-status-indicator.warning {
+    background: rgba(255, 152, 0, 0.2);
+    color: #FF9800;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #word_limit_extension_ui .flex-container.flexnowrap {
+        flex-direction: column;
+    }
+
+    #word_limit_extension_ui .flex1 {
+        margin-bottom: 10px;
+    }
+
+    .word-limit-control-group {
+        padding: 8px;
+    }
+
+    .word-limit-extension-header {
+        padding: 8px;
+    }
+
+    .word-limit-extension-header h3 {
+        font-size: 1em;
+    }
+
+    .word-limit-extension-header p {
+        font-size: 0.8em;
+    }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+    .word-limit-extension-header {
+        background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    }
+
+    .word-limit-control-group {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .word-limit-button {
+        background: #4a5568;
+    }
+
+    .word-limit-button:hover {
+        background: #2d3748;
+    }
+}
+
+/* Animation for smooth transitions */
+.word-limit-fade-in {
+    animation: wordLimitFadeIn 0.3s ease-in-out;
+}
+
+@keyframes wordLimitFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tooltip styling */
+.word-limit-tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.word-limit-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+}
+
+.word-limit-tooltip:hover::after {
+    opacity: 1;
+}

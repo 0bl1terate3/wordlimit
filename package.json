@@ -1,0 +1,41 @@
+{
+    "name": "word-limit-extension",
+    "version": "1.0.0",
+    "description": "Advanced word limit controls for SillyTavern character responses",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "sillytavern",
+        "extension",
+        "word-limit",
+        "character",
+        "response-control",
+        "ai",
+        "chatbot"
+    ],
+    "author": "SillyTavern Community",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-username/word-limit-extension.git"
+    },
+    "bugs": {
+        "url": "https://github.com/your-username/word-limit-extension/issues"
+    },
+    "homepage": "https://github.com/your-username/word-limit-extension#readme",
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "sillytavern": {
+        "version": ">=1.10.0",
+        "compatibility": "stable"
+    },
+    "files": [
+        "index.js",
+        "styles.css",
+        "manifest.json",
+        "README.md"
+    ]
+}

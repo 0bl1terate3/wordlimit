@@ -1,0 +1,32 @@
+{
+    "name": "Advanced Word Limit Control",
+    "version": "1.0.0",
+    "description": "Advanced word limit controls for character responses with per-character settings, auto-trimming, and custom instructions.",
+    "author": "SillyTavern Community",
+    "license": "MIT",
+    "homepage": "https://github.com/your-username/word-limit-extension",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-username/word-limit-extension.git"
+    },
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "sillytavern",
+        "extension",
+        "word-limit",
+        "character",
+        "response-control"
+    ],
+    "dependencies": {},
+    "devDependencies": {},
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "sillytavern": {
+        "version": ">=1.10.0",
+        "compatibility": "stable"
+    }
+}
