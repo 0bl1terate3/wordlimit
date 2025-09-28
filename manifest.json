@@ -4,10 +4,10 @@
     "description": "Advanced word limit controls for character responses with per-character settings, auto-trimming, and custom instructions.",
     "author": "SillyTavern Community",
     "license": "MIT",
-    "homepage": "https://github.com/your-username/word-limit-extension",
+    "homepage": "https://github.com/0bl1terate3/wordlimit",
     "repository": {
         "type": "git",
-        "url": "https://github.com/your-username/word-limit-extension.git"
+        "url": "https://github.com/0bl1terate3/wordlimit.git"
     },
     "main": "index.js",
     "scripts": {

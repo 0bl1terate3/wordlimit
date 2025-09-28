@@ -14,19 +14,42 @@ A powerful SillyTavern extension that provides advanced word limit controls for 
 
 ## Installation
 
-1. **Download the Extension**:
-   - Clone this repository or download the files
-   - Place the extension folder in your SillyTavern extensions directory
+### **Method 1: Direct GitHub Installation (Recommended)**
 
-2. **Install via SillyTavern**:
-   - Open SillyTavern
-   - Go to Extensions → Manage Extensions
-   - Add the GitHub repository URL: `https://github.com/your-username/word-limit-extension`
-   - Click Install
+1. **Open SillyTavern**
+2. **Go to Extensions → Manage Extensions**
+3. **Click "Add Extension" or "Install Extension"**
+4. **Enter the GitHub URL**: `https://github.com/0bl1terate3/wordlimit`
+5. **Click "Install"**
+6. **Enable the Extension**: Toggle it ON in your extensions list
+
+### **Method 2: Manual Installation**
+
+1. **Download the Extension**:
+   - Go to [https://github.com/0bl1terate3/wordlimit](https://github.com/0bl1terate3/wordlimit)
+   - Click "Code" → "Download ZIP"
+   - Extract the files to your SillyTavern extensions directory
+
+2. **Restart SillyTavern**:
+   - Close SillyTavern completely
+   - Reopen SillyTavern
+   - The extension should appear in your extensions list
 
 3. **Enable the Extension**:
-   - The extension should appear in your extensions list
-   - Enable it to start using word limit controls
+   - Go to Extensions → Manage Extensions
+   - Find "Advanced Word Limit Control"
+   - Toggle it ON to enable it
+
+## Quick Start
+
+1. **Install the extension** using Method 1 above
+2. **Select a character** in SillyTavern
+3. **Click "Advanced Definitions"**
+4. **Scroll to "Word Limit Settings"**
+5. **Enable "Enable Word Limit"**
+6. **Set minimum/maximum word counts**
+7. **Click "Save"**
+8. **Start chatting** - responses will be automatically limited!
 
 ## Usage
 

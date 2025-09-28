@@ -19,12 +19,12 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/your-username/word-limit-extension.git"
+        "url": "https://github.com/0bl1terate3/wordlimit.git"
     },
     "bugs": {
-        "url": "https://github.com/your-username/word-limit-extension/issues"
+        "url": "https://github.com/0bl1terate3/wordlimit/issues"
     },
-    "homepage": "https://github.com/your-username/word-limit-extension#readme",
+    "homepage": "https://github.com/0bl1terate3/wordlimit#readme",
     "engines": {
         "node": ">=14.0.0"
     },
