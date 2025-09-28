@@ -10,23 +10,11 @@
         "url": "https://github.com/0bl1terate3/wordlimit.git"
     },
     "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [
-        "sillytavern",
-        "extension",
-        "word-limit",
-        "character",
-        "response-control"
-    ],
-    "dependencies": {},
-    "devDependencies": {},
-    "engines": {
-        "node": ">=14.0.0"
-    },
+    "displayName": "Advanced Word Limit Control",
     "sillytavern": {
         "version": ">=1.10.0",
-        "compatibility": "stable"
+        "compatibility": "stable",
+        "displayName": "Advanced Word Limit Control",
+        "description": "Advanced word limit controls for character responses with per-character settings, auto-trimming, and custom instructions."
     }
 }

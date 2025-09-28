@@ -6,6 +6,17 @@
 // Extension metadata
 const EXTENSION_NAME = 'Advanced Word Limit Control';
 const EXTENSION_VERSION = '1.0.0';
+const EXTENSION_DESCRIPTION = 'Advanced word limit controls for character responses with per-character settings, auto-trimming, and custom instructions.';
+
+// Register extension with SillyTavern
+if (typeof window !== 'undefined' && window.extension_settings) {
+    window.extension_settings.word_limit_extension = {
+        name: EXTENSION_NAME,
+        version: EXTENSION_VERSION,
+        description: EXTENSION_DESCRIPTION,
+        enabled: true
+    };
+}
 
 // Word limit constants
 const WORD_LIMIT_METADATA_KEY = 'word_limit';
