@@ -1,22 +1,14 @@
+import { chat, eventSource, event_types, messageFormatting, saveChatConditional, saveSettingsDebounced, substituteParams } from '../../../../script.js';
+import { extension_settings } from '../../../extensions.js';
+import { SlashCommand } from '../../../slash-commands/SlashCommand.js';
+import { SlashCommandParser } from '../../../slash-commands/SlashCommandParser.js';
+
 /**
  * Advanced Word Limit Control Extension for SillyTavern
  * Provides per-character word limit settings with advanced controls
  */
 
-// Extension metadata
-const EXTENSION_NAME = 'Advanced Word Limit Control';
-const EXTENSION_VERSION = '1.0.0';
-const EXTENSION_DESCRIPTION = 'Advanced word limit controls for character responses with per-character settings, auto-trimming, and custom instructions.';
-
-// Register extension with SillyTavern
-if (typeof window !== 'undefined' && window.extension_settings) {
-    window.extension_settings.word_limit_extension = {
-        name: EXTENSION_NAME,
-        version: EXTENSION_VERSION,
-        description: EXTENSION_DESCRIPTION,
-        enabled: true
-    };
-}
+const log = (...msg) => console.log('[WordLimit]', ...msg);
 
 // Word limit constants
 const WORD_LIMIT_METADATA_KEY = 'word_limit';
@@ -46,61 +38,33 @@ const PHRASE_REPLACEMENTS = [
     { pattern: /\btrying to\b/gi, replacement: 'tryna' },
 ];
 
-// Extension state
-let extensionSettings = {
-    enabled: true,
-    defaultMinWords: 10,
-    defaultMaxWords: 100,
-    defaultStrictMode: false,
-    defaultAutoTrim: true,
-    defaultStyle: 'natural'
-};
+// Extension settings
+let settings;
+if (!extension_settings.wordLimitControl) {
+    extension_settings.wordLimitControl = {
+        enabled: true,
+        defaultMinWords: 10,
+        defaultMaxWords: 100,
+        defaultStrictMode: false,
+        defaultAutoTrim: true,
+        defaultStyle: 'natural'
+    };
+}
+settings = extension_settings.wordLimitControl;
 
 /**
  * Initialize the extension
  */
 function initializeExtension() {
-    console.log(`${EXTENSION_NAME} v${EXTENSION_VERSION} initialized`);
-
-    // Load extension settings
-    loadExtensionSettings();
+    log('Advanced Word Limit Control initialized');
 
     // Add UI to character popup
     addWordLimitUI();
 
     // Hook into message processing
     hookIntoMessageProcessing();
-
-    // Register extension settings
-    registerExtensionSettings();
 }
 
-/**
- * Load extension settings from SillyTavern
- */
-function loadExtensionSettings() {
-    try {
-        const savedSettings = extension_settings.word_limit_extension;
-        if (savedSettings) {
-            extensionSettings = { ...extensionSettings, ...savedSettings };
-        }
-    } catch (error) {
-        console.warn('Failed to load extension settings:', error);
-    }
-}
-
-/**
- * Save extension settings
- */
-function saveExtensionSettings() {
-    try {
-        if (typeof extension_settings !== 'undefined') {
-            extension_settings.word_limit_extension = extensionSettings;
-        }
-    } catch (error) {
-        console.warn('Failed to save extension settings:', error);
-    }
-}
 
 /**
  * Add word limit UI to character popup
@@ -262,11 +226,11 @@ function getCharacterWordLimitSettings() {
 
         return {
             enabled: character.data.word_limit_enabled,
-            min: character.data.word_limit_min || extensionSettings.defaultMinWords,
-            max: character.data.word_limit_max || extensionSettings.defaultMaxWords,
-            strictMode: character.data.word_limit_strict_mode || extensionSettings.defaultStrictMode,
+            min: character.data.word_limit_min || settings.defaultMinWords,
+            max: character.data.word_limit_max || settings.defaultMaxWords,
+            strictMode: character.data.word_limit_strict_mode || settings.defaultStrictMode,
             autoTrim: character.data.word_limit_auto_trim !== false,
-            style: character.data.word_limit_style || extensionSettings.defaultStyle,
+            style: character.data.word_limit_style || settings.defaultStyle,
             instructions: character.data.word_limit_instructions || ''
         };
     } catch (error) {
@@ -415,28 +379,153 @@ function normalizeWord(word) {
     return word.toLowerCase().replace(/^[^a-z0-9']+|[^a-z0-9']+$/g, '');
 }
 
-/**
- * Register extension settings with SillyTavern
- */
-function registerExtensionSettings() {
-    try {
-        if (typeof extension_settings !== 'undefined') {
-            extension_settings.word_limit_extension = extensionSettings;
-        }
-    } catch (error) {
-        console.warn('Failed to register extension settings:', error);
-    }
-}
+// Initialize the extension when SillyTavern is ready
+eventSource.on(event_types.APP_READY, () => {
+    const addSettings = () => {
+        const html = `
+        <div class="word-limit-settings">
+            <div class="inline-drawer">
+                <div class="inline-drawer-toggle inline-drawer-header">
+                    <b>Advanced Word Limit Control</b>
+                    <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+                </div>
+                <div class="inline-drawer-content" style="font-size:small;">
+                    <label class="flex-container">
+                        <input type="checkbox" id="word_limit_global_enabled"> <span>Enable Word Limit Control</span>
+                    </label>
+                    <div class="flex-container flexnowrap gap10">
+                        <div class="flex1">
+                            <label for="word_limit_default_min">
+                                <span>Default Minimum Words</span>
+                            </label>
+                            <input type="number" id="word_limit_default_min" class="text_pole" min="1" max="1000" value="10">
+                        </div>
+                        <div class="flex1">
+                            <label for="word_limit_default_max">
+                                <span>Default Maximum Words</span>
+                            </label>
+                            <input type="number" id="word_limit_default_max" class="text_pole" min="1" max="2000" value="100">
+                        </div>
+                    </div>
+                    <label class="flex-container">
+                        <input type="checkbox" id="word_limit_default_strict"> <span>Default Strict Mode</span>
+                    </label>
+                    <label class="flex-container">
+                        <input type="checkbox" id="word_limit_default_auto_trim" checked> <span>Default Auto Trim</span>
+                    </label>
+                    <div class="flex-container flexFlowColumn gap5">
+                        <label for="word_limit_default_style">
+                            <span>Default Response Style</span>
+                        </label>
+                        <select id="word_limit_default_style" class="text_pole">
+                            <option value="natural">Natural (let AI decide)</option>
+                            <option value="concise">Concise (prefer shorter responses)</option>
+                            <option value="detailed">Detailed (prefer longer responses)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        $('#extensions_settings').append(html);
 
-// Initialize the extension when the script loads
-if (typeof window !== 'undefined') {
-    // Wait for SillyTavern to be ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initializeExtension);
-    } else {
-        initializeExtension();
-    }
-}
+        // Initialize settings
+        const enabledCheckbox = document.querySelector('#word_limit_global_enabled');
+        const minInput = document.querySelector('#word_limit_default_min');
+        const maxInput = document.querySelector('#word_limit_default_max');
+        const strictCheckbox = document.querySelector('#word_limit_default_strict');
+        const autoTrimCheckbox = document.querySelector('#word_limit_default_auto_trim');
+        const styleSelect = document.querySelector('#word_limit_default_style');
+
+        if (enabledCheckbox) enabledCheckbox.checked = settings.enabled ?? true;
+        if (minInput) minInput.value = settings.defaultMinWords ?? 10;
+        if (maxInput) maxInput.value = settings.defaultMaxWords ?? 100;
+        if (strictCheckbox) strictCheckbox.checked = settings.defaultStrictMode ?? false;
+        if (autoTrimCheckbox) autoTrimCheckbox.checked = settings.defaultAutoTrim ?? true;
+        if (styleSelect) styleSelect.value = settings.defaultStyle ?? 'natural';
+
+        // Add event listeners
+        if (enabledCheckbox) {
+            enabledCheckbox.addEventListener('change', (e) => {
+                settings.enabled = e.target?.checked ?? false;
+                saveSettingsDebounced();
+            });
+        }
+
+        if (minInput) {
+            minInput.addEventListener('change', (e) => {
+                settings.defaultMinWords = parseInt(e.target?.value ?? '10');
+                saveSettingsDebounced();
+            });
+        }
+
+        if (maxInput) {
+            maxInput.addEventListener('change', (e) => {
+                settings.defaultMaxWords = parseInt(e.target?.value ?? '100');
+                saveSettingsDebounced();
+            });
+        }
+
+        if (strictCheckbox) {
+            strictCheckbox.addEventListener('change', (e) => {
+                settings.defaultStrictMode = e.target?.checked ?? false;
+                saveSettingsDebounced();
+            });
+        }
+
+        if (autoTrimCheckbox) {
+            autoTrimCheckbox.addEventListener('change', (e) => {
+                settings.defaultAutoTrim = e.target?.checked ?? true;
+                saveSettingsDebounced();
+            });
+        }
+
+        if (styleSelect) {
+            styleSelect.addEventListener('change', (e) => {
+                settings.defaultStyle = e.target?.value ?? 'natural';
+                saveSettingsDebounced();
+            });
+        }
+    };
+
+    addSettings();
+    initializeExtension();
+});
+
+// Add slash commands
+SlashCommandParser.addCommandObject(SlashCommand.fromProps({
+    name: 'word-limit-apply',
+    callback: (args) => {
+        const text = args.join(' ');
+        if (!text) return 'No text provided';
+
+        const processed = applyCharacterWordLimit(text);
+        const originalWords = splitWords(text).length;
+        const processedWords = splitWords(processed).length;
+
+        return `Applied word limit: ${originalWords} → ${processedWords} words\nResult: ${processed}`;
+    },
+    helpString: 'Apply word limit to text. Usage: /word-limit-apply <text>',
+}));
+
+SlashCommandParser.addCommandObject(SlashCommand.fromProps({
+    name: 'word-limit-status',
+    callback: () => {
+        const settings = getCharacterWordLimitSettings();
+        if (!settings) {
+            return 'No word limit settings found for current character';
+        }
+
+        return `Word Limit Status:
+- Enabled: ${settings.enabled}
+- Min Words: ${settings.min}
+- Max Words: ${settings.max}
+- Strict Mode: ${settings.strictMode}
+- Auto Trim: ${settings.autoTrim}
+- Style: ${settings.style}`;
+    },
+    helpString: 'Show current word limit settings for the character',
+}));
 
 // Export for testing
 if (typeof module !== 'undefined' && module.exports) {
