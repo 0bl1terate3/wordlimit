@@ -167,6 +167,96 @@ function addWordLimitUI() {
 
     // Add event listeners
     setupWordLimitEventListeners();
+
+    // Hook into character popup opening to load settings
+    hookIntoCharacterPopupOpening();
+}
+
+/**
+ * Hook into character popup opening to load word limit settings
+ */
+function hookIntoCharacterPopupOpening() {
+    // Use event delegation to catch when character popup opens
+    document.addEventListener('click', function (event) {
+        // Check if character popup is being opened
+        if (event.target && event.target.id === 'character_popup_ok') {
+            // Character popup is being closed, load settings
+            setTimeout(loadWordLimitSettings, 100);
+        }
+    });
+
+    // Also listen for when the popup becomes visible
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+                const popup = document.getElementById('character_popup');
+                if (popup && popup.style.display !== 'none') {
+                    // Character popup is open, load settings
+                    setTimeout(loadWordLimitSettings, 100);
+                }
+            }
+        });
+    });
+
+    const characterPopup = document.getElementById('character_popup');
+    if (characterPopup) {
+        observer.observe(characterPopup, { attributes: true, attributeFilter: ['style'] });
+    }
+}
+
+/**
+ * Load word limit settings from character data
+ */
+function loadWordLimitSettings() {
+    try {
+        if (typeof this_chid === 'undefined' || !window.characters || !window.characters[this_chid]) {
+            log('No active character to load settings from');
+            return;
+        }
+
+        const character = window.characters[this_chid];
+        if (!character.data) {
+            log('No character data to load settings from');
+            return;
+        }
+
+        // Load settings into form
+        const enabledCheckbox = document.getElementById('word_limit_enabled');
+        const minInput = document.getElementById('word_limit_min');
+        const maxInput = document.getElementById('word_limit_max');
+        const strictCheckbox = document.getElementById('word_limit_strict_mode');
+        const autoTrimCheckbox = document.getElementById('word_limit_auto_trim');
+        const styleSelect = document.getElementById('word_limit_style');
+        const instructionsTextarea = document.getElementById('word_limit_instructions');
+
+        if (enabledCheckbox) {
+            enabledCheckbox.checked = character.data.word_limit_enabled || false;
+            // Trigger change event to show/hide controls
+            enabledCheckbox.dispatchEvent(new Event('change'));
+        }
+        if (minInput) {
+            minInput.value = character.data.word_limit_min || 10;
+        }
+        if (maxInput) {
+            maxInput.value = character.data.word_limit_max || 100;
+        }
+        if (strictCheckbox) {
+            strictCheckbox.checked = character.data.word_limit_strict_mode || false;
+        }
+        if (autoTrimCheckbox) {
+            autoTrimCheckbox.checked = character.data.word_limit_auto_trim !== false;
+        }
+        if (styleSelect) {
+            styleSelect.value = character.data.word_limit_style || 'natural';
+        }
+        if (instructionsTextarea) {
+            instructionsTextarea.value = character.data.word_limit_instructions || '';
+        }
+
+        log('Word limit settings loaded from character data');
+    } catch (error) {
+        console.warn('Failed to load word limit settings:', error);
+    }
 }
 
 /**
@@ -191,20 +281,93 @@ function setupWordLimitEventListeners() {
  * Hook into SillyTavern's message processing
  */
 function hookIntoMessageProcessing() {
-    // Override the message processing function if it exists
-    if (typeof window !== 'undefined' && window.applyWordLimitIfNeeded) {
-        const originalApplyWordLimit = window.applyWordLimitIfNeeded;
+    // The word limit functionality is already integrated in SillyTavern
+    // We just need to ensure our character settings are properly saved
+    log('Word limit functionality is already integrated in SillyTavern');
 
-        window.applyWordLimitIfNeeded = async function (text, options = {}) {
-            // First check for character-specific settings
-            const characterSettings = getCharacterWordLimitSettings();
-            if (characterSettings && characterSettings.enabled) {
-                return { text: applyCharacterWordLimit(text), applied: true, method: 'character_settings' };
+    // Hook into character save process to ensure our settings are saved
+    hookIntoCharacterSave();
+}
+
+/**
+ * Hook into character save process to save word limit settings
+ */
+function hookIntoCharacterSave() {
+    // Wait for the character popup to be ready
+    const characterPopup = document.getElementById('character_popup');
+    if (!characterPopup) {
+        // Retry after a short delay
+        setTimeout(hookIntoCharacterSave, 1000);
+        return;
+    }
+
+    // Hook into the character save button
+    const saveButton = document.getElementById('character_popup_ok');
+    if (saveButton) {
+        const originalClick = saveButton.onclick;
+        saveButton.onclick = function (event) {
+            // Save our word limit settings before the character is saved
+            saveWordLimitSettings();
+
+            // Call the original save function
+            if (originalClick) {
+                originalClick.call(this, event);
             }
-
-            // Fall back to original function
-            return await originalApplyWordLimit(text, options);
         };
+        log('Hooked into character save process');
+    }
+}
+
+/**
+ * Save word limit settings to character data
+ */
+function saveWordLimitSettings() {
+    try {
+        if (typeof this_chid === 'undefined' || !window.characters || !window.characters[this_chid]) {
+            log('No active character to save settings to');
+            return;
+        }
+
+        const character = window.characters[this_chid];
+        if (!character.data) {
+            character.data = {};
+        }
+
+        // Get form values
+        const enabledCheckbox = document.getElementById('word_limit_enabled');
+        const minInput = document.getElementById('word_limit_min');
+        const maxInput = document.getElementById('word_limit_max');
+        const strictCheckbox = document.getElementById('word_limit_strict_mode');
+        const autoTrimCheckbox = document.getElementById('word_limit_auto_trim');
+        const styleSelect = document.getElementById('word_limit_style');
+        const instructionsTextarea = document.getElementById('word_limit_instructions');
+
+        // Save settings to character data
+        if (enabledCheckbox) {
+            character.data.word_limit_enabled = enabledCheckbox.checked;
+        }
+        if (minInput) {
+            character.data.word_limit_min = parseInt(minInput.value) || 10;
+        }
+        if (maxInput) {
+            character.data.word_limit_max = parseInt(maxInput.value) || 100;
+        }
+        if (strictCheckbox) {
+            character.data.word_limit_strict_mode = strictCheckbox.checked;
+        }
+        if (autoTrimCheckbox) {
+            character.data.word_limit_auto_trim = autoTrimCheckbox.checked;
+        }
+        if (styleSelect) {
+            character.data.word_limit_style = styleSelect.value || 'natural';
+        }
+        if (instructionsTextarea) {
+            character.data.word_limit_instructions = instructionsTextarea.value || '';
+        }
+
+        log('Word limit settings saved to character data');
+    } catch (error) {
+        console.warn('Failed to save word limit settings:', error);
     }
 }
 
